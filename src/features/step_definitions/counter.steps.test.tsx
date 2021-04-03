@@ -1,6 +1,6 @@
 import { defineFeature, loadFeature } from 'jest-cucumber'
 import Counter from '../../components/Counter'
-import TestRenderer from 'react-test-renderer'
+import TestRenderer, { act } from 'react-test-renderer'
 
 const feature = loadFeature('./src/features/counter.feature')
 
@@ -19,7 +19,7 @@ defineFeature(feature, test => {
 
     then('showing 0', () => {
       const divInstance = testInstance.findByProps({ id: 'root-counter' })
-      expect(divInstance.props.children).toBe('0')
+      expect(divInstance.props.children).toBe(0)
     })
   })
 
@@ -33,16 +33,18 @@ defineFeature(feature, test => {
 
     when('clicking -', () => {
       const buttonInstance = testInstance.findByProps({ children: '-' })
-      buttonInstance.props.onClick()
+      act(() => {
+        buttonInstance.props.onClick()
+      })
     })
 
     then('showing -1', () => {
       const divInstance = testInstance.findByProps({ id: 'root-counter' })
-      expect(divInstance.props.children).toBe('-1')
+      expect(divInstance.props.children).toBe(-1)
     })
   })
 
-  test('clicking + decrements', ({ given, when, then }) => {
+  test('clicking + increments', ({ given, when, then }) => {
     let testInstance: TestRenderer.ReactTestInstance
 
     given('mount counter', () => {
@@ -52,12 +54,14 @@ defineFeature(feature, test => {
 
     when('clicking +', () => {
       const buttonInstance = testInstance.findByProps({ children: '+' })
-      buttonInstance.props.onClick()
+      act(() => {
+        buttonInstance.props.onClick()
+      })
     })
 
     then('showing 1', () => {
       const divInstance = testInstance.findByProps({ id: 'root-counter' })
-      expect(divInstance.props.children).toBe('1')
+      expect(divInstance.props.children).toBe(1)
     })
   })
 })
